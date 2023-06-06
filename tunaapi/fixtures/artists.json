@@ -1,0 +1,29 @@
+[
+    {
+        "model": "tunaapi.artist",
+        "pk": 1,
+        "fields": {
+            "name": "Eddie Vedder",
+            "age": 50,
+            "bio": "Pearl Jam/Solo"
+        }
+    },
+    {
+        "model": "tunaapi.artist",
+        "pk": 2,
+        "fields": {
+            "name": "Chris Cornell",
+            "age": 50,
+            "bio": "Soundgarden/Solo/Temple of the Dog"
+        }
+    },
+    {
+        "model": "tunaapi.artist",
+        "pk": 3,
+        "fields": {
+            "name": "Vaden Todd Lewis",
+            "age": 50,
+            "bio": "Toadies"
+        }
+    }
+]
