@@ -1,0 +1,32 @@
+[
+    {
+        "model": "tunaapi.song",
+        "pk": 1,
+        "fields": {
+            "title": "Society",
+            "artist_id": 1,
+            "album": "Into the Wild",
+            "length": 4
+        }
+    },
+    {
+        "model": "tunaapi.song",
+        "pk": 2,
+        "fields": {
+            "title": "Reach Down",
+            "artist_id": 2,
+            "album": "Temple of the Dog",
+            "length": 9
+        }
+    },
+    {
+        "model": "tunaapi.song",
+        "pk": 3,
+        "fields": {
+            "title": "Hell Below/Stars Above",
+            "artist_id": 3,
+            "album": "Hell Below/Stars Above",
+            "length": 5
+        }
+    }
+]
