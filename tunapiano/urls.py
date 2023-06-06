@@ -16,10 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from tunaapi.views import GenreView
+from tunaapi.views import GenreView, ArtistView
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'genres', GenreView, 'genre')
+router.register(r'artists', ArtistView, 'artist')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
