@@ -1,5 +1,6 @@
 """View module for handling requests about artists"""
 from django.http import HttpResponseServerError
+from django.db.models import Count
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
@@ -10,15 +11,19 @@ class ArtistView(ViewSet):
     def retrieve(self, request, pk):
         """GET request for a single artist object"""
         try:
-            artist = Artist.objects.get(pk=pk)
-            serializer = ArtistSerializer(artist)
+            artists = Artist.objects.annotate(
+                song_count = Count('artist_songs')
+                ).get(pk=pk)
+            serializer = ArtistSerializer(artists)
             return Response(serializer.data)
         except Artist.DoesNotExist as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
     def list(self, request):
         """GET request for a list of artist objects"""
-        artists = Artist.objects.all()
+        artists = Artist.objects.annotate(
+            song_count=Count('artist_songs')
+        )
         serializer = ArtistSerializer(artists, many=True, context={'request': request})
         return Response(serializer.data)
 
@@ -49,6 +54,8 @@ class ArtistView(ViewSet):
 
 class ArtistSerializer(serializers.ModelSerializer):
     """JSON serializer for artists"""
+    song_count = serializers.IntegerField(default=None)
     class Meta:
         model = Artist
-        fields = ('id', 'name', 'age', 'bio')
+        fields = ('id', 'name', 'age', 'bio', 'song_count', 'songs')
+        depth = 2
