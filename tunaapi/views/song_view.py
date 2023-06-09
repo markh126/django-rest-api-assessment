@@ -1,5 +1,6 @@
 """View module for handling requests about songs"""
 from django.http import HttpResponseServerError
+from django.db.models import Count
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
@@ -14,7 +15,9 @@ class SongView(ViewSet):
     def retrieve(self, request, pk):
         """GET request for a single song"""
         try:
-            song = Song.objects.get(pk=pk)
+            song = Song.objects.annotate(
+                genre_count=Count('genres')
+                ).get(pk=pk)
             serializer = SongSerializer(song)
             return Response(serializer.data)
         except Song.DoesNotExist as ex:
@@ -22,7 +25,9 @@ class SongView(ViewSet):
 
     def list(self, request):
         """GET request for a list of songs"""
-        songs = Song.objects.all()
+        songs = Song.objects.annotate(
+            genre_count=Count('genres')
+)
         serializer = SongSerializer(songs, many=True, context={'request': request})
         return Response(serializer.data)
 
@@ -72,10 +77,18 @@ class SongView(ViewSet):
         song_genre.delete()
         return Response({'message': 'Genre removed'}, status=status.HTTP_204_NO_CONTENT)
 
-class SongSerializer(serializers.ModelSerializer):
-    """JSON serializer for songs"""
+class SongGenreSerializer(serializers.ModelSerializer):
+    """JSON serializer for song genre"""
     class Meta:
-        model = Song
-        fields = ('id', 'title', 'artist_id', 'album', 'length')
+        model = SongGenre
+        fields = ('genre_id', )
         depth = 1
 
+class SongSerializer(serializers.ModelSerializer):
+    """JSON serializer for songs"""
+    genre_count = serializers.IntegerField(default=None)
+    genres = SongGenreSerializer(many=True, read_only=True)
+    class Meta:
+        model = Song
+        fields = ('id', 'title', 'artist_id', 'album', 'length', 'genre_count', 'genres')
+        depth = 1
