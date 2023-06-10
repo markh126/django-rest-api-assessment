@@ -20,7 +20,7 @@ class GenreView(ViewSet):
     def list(self, request):
         """GET request for a list of genre objects"""
         genres = Genre.objects.all()
-        serializer = GenreSerializer(genres, many=True, context={'request': request})
+        serializer = AllGenreSerializer(genres, many=True, context={'request': request})
         return Response(serializer.data)
 
     def create(self, request):
@@ -57,3 +57,9 @@ class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
         fields = ('id', 'description', 'songs')
+        
+class AllGenreSerializer(serializers.ModelSerializer):
+    """JSON Serializer for all genres with no song info"""
+    class Meta:
+        model = Genre
+        fields = ('id', 'description')

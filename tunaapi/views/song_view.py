@@ -25,10 +25,8 @@ class SongView(ViewSet):
 
     def list(self, request):
         """GET request for a list of songs"""
-        songs = Song.objects.annotate(
-            genre_count=Count('genres')
-)
-        serializer = SongSerializer(songs, many=True, context={'request': request})
+        songs = Song.objects.all()
+        serializer = AllSongSerializer(songs, many=True, context={'request': request})
         return Response(serializer.data)
 
     def create(self, request):
@@ -92,3 +90,9 @@ class SongSerializer(serializers.ModelSerializer):
         model = Song
         fields = ('id', 'title', 'artist_id', 'album', 'length', 'genre_count', 'genres')
         depth = 1
+
+class AllSongSerializer(serializers.ModelSerializer):
+    """JSON serialzer for songs with no genre info"""
+    class Meta:
+        model = Song
+        fields = ('id', 'title', 'artist_id', 'album', 'length')
