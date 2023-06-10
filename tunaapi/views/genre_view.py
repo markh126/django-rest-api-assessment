@@ -2,9 +2,9 @@
 from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
-from rest_framework import serializers, status
+from rest_framework import status
 from tunaapi.models.genre import Genre
-from tunaapi.models.songgenre import SongGenre
+from tunaapi.serializers.genre_serializer import GenreSerializer, AllGenreSerializer
 
 class GenreView(ViewSet):
     """Tuna API genres"""
@@ -43,23 +43,3 @@ class GenreView(ViewSet):
         genre = Genre.objects.get(pk=pk)
         genre.delete()
         return Response({}, status=status.HTTP_204_NO_CONTENT)
-    
-class SongGenreSerializer(serializers.ModelSerializer):
-    """JSON serializer for song genre"""
-    class Meta:
-        model = SongGenre
-        fields = ('song_id', )
-        depth = 1
-
-class GenreSerializer(serializers.ModelSerializer):
-    """JSON Serializer for genres"""
-    songs = SongGenreSerializer(many=True, read_only=True)
-    class Meta:
-        model = Genre
-        fields = ('id', 'description', 'songs')
-        
-class AllGenreSerializer(serializers.ModelSerializer):
-    """JSON Serializer for all genres with no song info"""
-    class Meta:
-        model = Genre
-        fields = ('id', 'description')

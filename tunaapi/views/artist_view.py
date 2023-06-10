@@ -3,8 +3,9 @@ from django.http import HttpResponseServerError
 from django.db.models import Count
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
-from rest_framework import serializers, status
+from rest_framework import status
 from tunaapi.models.artist import Artist
+from tunaapi.serializers.artist_serializer import AllArtistSerializer, ArtistSerializer
 
 class ArtistView(ViewSet):
     """Tuna API artists"""
@@ -49,17 +50,3 @@ class ArtistView(ViewSet):
         artist = Artist.objects.get(pk=pk)
         artist.delete()
         return Response({}, status=status.HTTP_204_NO_CONTENT)
-
-class ArtistSerializer(serializers.ModelSerializer):
-    """JSON serializer for artists"""
-    song_count = serializers.IntegerField(default=None)
-    class Meta:
-        model = Artist
-        fields = ('id', 'name', 'age', 'bio', 'song_count', 'songs')
-        depth = 2
-
-class AllArtistSerializer(serializers.ModelSerializer):
-    """JSON serializer for artists with no song info"""
-    class Meta:
-        model = Artist
-        fields = ('id', 'name', 'age', 'bio')
