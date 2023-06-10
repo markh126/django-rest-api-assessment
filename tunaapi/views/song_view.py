@@ -3,12 +3,13 @@ from django.http import HttpResponseServerError
 from django.db.models import Count
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
-from rest_framework import serializers, status
+from rest_framework import status
 from rest_framework.decorators import action
 from tunaapi.models.song import Song
 from tunaapi.models.artist import Artist
 from tunaapi.models.genre import Genre
 from tunaapi.models.songgenre import SongGenre
+from tunaapi.serializers.song_serializer import SongSerializer, AllSongSerializer
 
 class SongView(ViewSet):
     """Tuna API Songs"""
@@ -74,25 +75,3 @@ class SongView(ViewSet):
         song_genre = SongGenre.objects.get(song_id=song, genre_id=genre)
         song_genre.delete()
         return Response({'message': 'Genre removed'}, status=status.HTTP_204_NO_CONTENT)
-
-class SongGenreSerializer(serializers.ModelSerializer):
-    """JSON serializer for song genre"""
-    class Meta:
-        model = SongGenre
-        fields = ('genre_id', )
-        depth = 1
-
-class SongSerializer(serializers.ModelSerializer):
-    """JSON serializer for songs"""
-    genre_count = serializers.IntegerField(default=None)
-    genres = SongGenreSerializer(many=True, read_only=True)
-    class Meta:
-        model = Song
-        fields = ('id', 'title', 'artist_id', 'album', 'length', 'genre_count', 'genres')
-        depth = 1
-
-class AllSongSerializer(serializers.ModelSerializer):
-    """JSON serialzer for songs with no genre info"""
-    class Meta:
-        model = Song
-        fields = ('id', 'title', 'artist_id', 'album', 'length')
