@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from tunaapi.views import GenreView, ArtistView, SongView, SongGenreView
+from tunaapi.views import GenreView, ArtistView, SongView, SongGenreView, check_user, register_user
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'genres', GenreView, 'genre')
@@ -27,4 +27,6 @@ router.register(r'song_genres', SongGenreView, 'song_genre')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
+    path('register', register_user),
+    path('checkuser', check_user),
 ]
