@@ -13,7 +13,7 @@ class ArtistView(ViewSet):
         """GET request for a single artist object"""
         try:
             artists = Artist.objects.annotate(
-                song_count = Count('artist_songs')
+                song_count = Count('songs')
                 ).get(pk=pk)
             serializer = ArtistSerializer(artists)
             return Response(serializer.data)

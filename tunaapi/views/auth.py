@@ -1,6 +1,6 @@
-from tunaapi.models.user import User
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from tunaapi.models.user import User
 
 
 @api_view(['POST'])
